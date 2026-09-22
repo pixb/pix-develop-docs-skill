@@ -1,166 +1,96 @@
 # pix-develop-docs-skill
 
-一个用于分析复杂项目并生成演进式开发文档的 Trae 技能。
+Analyze a project from a "re-implementation" perspective and generate evolutionary development documentation.
 
-## 📖 简介
+## What It Does
 
-pix-develop-docs 通过"重新实现"的方式帮助理解复杂项目。它从需求角度出发，采用演进式开发思路，生成结构化的开发文档，展示如何从零开始，逐步构建项目。
+Walks through a codebase and produces a numbered document sequence (00_ through 06_) that explains how to rebuild the project from scratch, phase by phase. Each phase is independently verifiable.
 
-## 🎯 核心特性
+## Installation
 
-- **需求驱动**：从需求出发，解释每个设计决策的原因
-- **演进式开发**：从 MVP 到完整功能，循序渐进
-- **语言无关**：适用于所有编程语言和框架
-- **标准化输出**：生成 00_ 前缀的 markdown 文档序列
-- **易于跟随**：让读者能够跟随文档重新实现项目
+### Claude Code
 
-## 🚀 快速开始
-
-### 激活方式
-
-在 Trae 中询问以下类型的问题：
-
-```
-"分析这个项目并生成开发文档"
-"帮我理解这个项目的架构"
-"生成项目的演进式开发文档"
-"从零开始重新实现这个项目"
-"创建项目开发文档"
+```bash
+# Copy to your skills directory
+cp -r pix-develop-docs-skill ~/.claude/skills/
 ```
 
-### 输出文档
+### Cursor
 
-技能会生成以下文档序列：
-
-- `00_项目概述与需求分析.md` - 项目背景、核心需求、技术栈概览
-- `01_核心功能拆解.md` - 功能模块划分、依赖关系、优先级排序
-- `02_阶段一_框架搭建.md` - MVP设计、技术选型、基础架构
-- `03_阶段二_核心功能实现.md` - 核心功能详细设计、实现步骤
-- `04_阶段三_功能扩展与优化.md` - 次要功能、性能优化、代码重构
-- `05_阶段四_完善与细节处理.md` - 边界情况、错误处理、日志监控
-- `06_总结与最佳实践.md` - 项目总结、设计模式、最佳实践
-
-## 📋 文档结构
-
-每个文档包含以下部分：
-
-1. **概述**：本阶段的目标和范围
-2. **需求分析**：当前阶段需要实现的需求
-3. **技术方案**：采用的技术方案和设计决策
-4. **实现步骤**：详细的实现步骤和代码示例
-5. **关键决策**：重要设计决策的原因说明
-6. **验证方法**：如何验证本阶段的实现
-
-## 🔧 工作流程
-
-1. **项目扫描**：读取项目代码，分析目录结构和技术栈
-2. **需求分析**：识别核心功能和业务需求
-3. **功能拆解**：将项目拆解为多个演进阶段
-4. **文档生成**：生成 00_ 前缀的 markdown 文档序列
-
-## 💡 使用场景
-
-- **理解新项目**：快速理解复杂项目的架构和实现
-- **团队培训**：帮助新成员理解项目设计思路
-- **代码审查**：从演进角度评估代码质量
-- **技术分享**：生成项目技术分享文档
-- **知识沉淀**：将项目经验转化为可复用的文档
-
-## 📚 示例
-
-### 示例 1：Web 应用项目
-
-```
-用户："分析这个 Web 应用项目并生成开发文档"
-
-输出：
-- 00_项目概述与需求分析.md
-- 01_核心功能拆解.md
-- 02_阶段一_框架搭建.md
-- 03_阶段二_核心功能实现.md
-- 04_阶段三_功能扩展与优化.md
-- 05_阶段四_完善与细节处理.md
-- 06_总结与最佳实践.md
+```bash
+# Copy to your skills directory
+cp -r pix-develop-docs-skill ~/.cursor/skills/
 ```
 
-### 示例 2：后端服务项目
+### Codex CLI
 
-```
-用户："帮我理解这个后端服务项目"
-
-输出：
-- 00_项目概述与需求分析.md
-- 01_核心功能拆解.md
-- 02_阶段一_服务框架搭建.md
-- 03_阶段二_核心业务逻辑.md
-- 04_阶段三_数据存储和查询.md
-- 05_阶段四_性能优化和监控.md
-- 06_总结与最佳实践.md
+```bash
+# Copy to your skills directory
+cp -r pix-develop-docs-skill ~/.codex/skills/
 ```
 
-## 🛠️ 技术栈识别
+### Trae
 
-技能能够自动识别常见的技术栈：
+```bash
+# Copy to your skills directory
+cp -r pix-develop-docs-skill ~/.trae/skills/
+```
 
-| 文件/目录 | 技术栈 |
-| :--- | :--- |
-| package.json | Node.js/JavaScript |
-| requirements.txt | Python |
-| pom.xml | Java (Maven) |
-| build.gradle | Java (Gradle) |
-| go.mod | Go |
-| Cargo.toml | Rust |
-| composer.json | PHP |
-| Gemfile | Ruby |
+### Generic (any platform)
 
-## 📝 最佳实践
+Clone or copy the directory to wherever your agent looks for skills, then restart the agent session.
 
-### 分析阶段
+## Usage
 
-- **从整体到局部**：先理解整体架构，再深入细节
-- **关注核心路径**：优先分析核心业务流程
-- **记录疑问**：记录不理解的地方，后续深入分析
+In your agent session, say:
 
-### 文档编写
+```
+analyze this project and generate development docs
+```
 
-- **保持连贯性**：确保各阶段文档的逻辑连贯
-- **使用图表**：适当使用图表辅助说明
-- **代码注释**：代码示例要有清晰注释
-- **避免冗余**：避免重复相同内容
+or:
 
-### 质量保证
+```
+帮我理解这个项目的架构
+```
 
-- **逻辑检查**：确保演进路径合理
-- **完整性检查**：确保覆盖所有核心功能
-- **可读性检查**：确保文档易于理解
+or:
 
-## 🎯 适用项目
+```
+从零开始重新实现这个项目
+```
 
-- Web 应用（前端、后端、全栈）
-- 移动应用（iOS、Android、跨平台）
-- 桌面应用（Electron、Qt、WPF）
-- 后端服务（REST API、GraphQL、微服务）
-- 数据处理工具（ETL、数据管道）
-- 命令行工具（CLI）
-- 库和框架（SDK、工具库）
+## Output
 
-## 🔍 扩展性
+A `docs/evolutionary-dev/` directory with:
 
-可以根据项目特点添加额外的文档：
+| File | Content |
+|------|---------|
+| `00_项目概述与需求分析.md` | Background, requirements, tech stack |
+| `01_核心功能拆解.md` | Module inventory, dependencies, data flow |
+| `02_阶段一_*.md` | Phase 1: skeleton + core data model |
+| `03_阶段二_*.md` | Phase 2: core business logic |
+| `04_阶段三_*.md` | Phase 3: external integrations |
+| `05_阶段四_*.md` | Phase 4: polish + edge cases |
+| `06_总结与最佳实践.md` | Recap, patterns, lessons, improvements |
 
-- `07_部署与运维.md`
-- `08_测试策略.md`
-- `09_性能优化.md`
-- `10_扩展开发.md`
+## Supported Projects
 
-## 📄 许可证
+Any programming language or framework — the skill auto-detects:
 
-本技能遵循 Trae Skills 架构规范。
+- Node.js / TypeScript / JavaScript
+- Python
+- Go
+- Rust
+- Java / Kotlin
+- Ruby
+- PHP
+- And more
 
-## 🤝 贡献
+## Templates
 
-欢迎提出改进建议和 bug 报告。
+The `templates/` directory contains fill-in templates for each document. These are references for the agent, not files to be edited manually.
 
-## 📞 联系方式
+## License
 
-如有问题或建议，请通过 Trae 平台反馈。
+MIT

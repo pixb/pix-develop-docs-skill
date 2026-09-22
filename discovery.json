@@ -1,0 +1,123 @@
+{
+  "question": "How would I rebuild this project from scratch, and what are the key design decisions?",
+  "trigger": [
+    "Project analysis requested",
+    "Need to understand unfamiliar codebase",
+    "Onboarding to new project",
+    "Architecture documentation needed"
+  ],
+  "decision": [
+    "Generate evolutionary development docs",
+    "Skip documentation, provide verbal summary only"
+  ],
+  "evidence": [
+    "Project source code",
+    "Dependency manifest (package.json, go.mod, requirements.txt, etc.)",
+    "Entry point files",
+    "Test files"
+  ],
+  "success_measure": "A complete set of 7 numbered markdown documents that a developer could follow to rebuild the project from zero, with each phase independently verifiable",
+  "outcome": "Produce a docs/evolutionary-dev/ directory with 00_-06_ markdown files covering project analysis, functional decomposition, and 4 evolutionary phases",
+  "intended_users": [
+    "developers onboarding to a new codebase",
+    "tech leads creating architecture documentation",
+    "teams preparing knowledge transfer"
+  ],
+  "input_types": [
+    "source code directory",
+    "git repository"
+  ],
+  "output_artifacts": [
+    "numbered markdown document sequence (00_-06_)",
+    "docs/evolutionary-dev/ directory"
+  ],
+  "use_cases": [
+    "onboarding to a new project",
+    "architecture documentation",
+    "technical handoff",
+    "code review preparation"
+  ],
+  "examples": [
+    {
+      "invocation": "/pix-develop-docs-skill",
+      "description": "Analyze the current project and generate evolutionary dev docs"
+    },
+    {
+      "invocation": "/pix-develop-docs-skill analyze the Go API service",
+      "description": "Analyze a specific project and generate development documentation"
+    },
+    {
+      "invocation": "/pix-develop-docs-skill help me understand this codebase architecture",
+      "description": "Walk through the project structure and explain how to rebuild it"
+    }
+  ],
+  "permissions_systems": [
+    "Read local project files"
+  ],
+  "typical_completion_time": "5-15 minutes depending on project size",
+  "compatibility": {
+    "declared": [
+      "claude",
+      "cursor",
+      "codex",
+      "trae",
+      "windsurf"
+    ],
+    "certified": []
+  },
+  "environment": {
+    "documentation_sources": [
+      "Project source code and dependency manifests"
+    ],
+    "data_sources": [
+      "User-provided project directory"
+    ],
+    "required_capabilities": [
+      "Read local files and directories",
+      "Write markdown files"
+    ],
+    "readiness_checks": [
+      "Target directory exists and contains source code",
+      "At least one dependency manifest file is present"
+    ]
+  },
+  "risk": {
+    "tier": "moderate",
+    "permissions": [
+      "Read project source files",
+      "Write markdown files to docs/ directory"
+    ],
+    "mutation_boundary": "approval-required",
+    "approval_required": [
+      "User confirms target directory before document generation"
+    ]
+  },
+  "software_mutation": {
+    "applies": false
+  },
+  "data_interfaces": {
+    "applies": false
+  },
+  "semantic_recon": {
+    "applies": false
+  },
+  "semantic_contract": {
+    "applies": false
+  },
+  "routing_tests": {
+    "should_trigger": [
+      "analyze this project",
+      "generate development docs",
+      "help me understand this codebase",
+      "create project documentation",
+      "从零开始重新实现这个项目"
+    ],
+    "should_not_trigger": [
+      "write unit tests",
+      "fix a bug in this file",
+      "deploy this application",
+      "generate API documentation"
+    ]
+  },
+  "support_tier": "supported"
+}

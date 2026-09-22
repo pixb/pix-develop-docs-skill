@@ -1,412 +1,245 @@
 ---
 name: pix-develop-docs-skill
-description: This skill should be used when the user asks to analyze a project and generate development documentation from a "re-implementation" perspective. Activates with phrases like analyze project, generate development docs, understand project, create project documentation, project analysis. Provides step-by-step evolutionary development documentation that explains how to rebuild the project from scratch.
+description: Analyze a project from a "re-implementation" perspective and generate evolutionary development documentation. Activates with phrases like analyze project, generate development docs, understand project, create project documentation, project analysis, explain project architecture. Produces numbered markdown document sequences (00_ through 06_) that walk through rebuilding the project from scratch using incremental phases.
+activation: /pix-develop-docs
+license: MIT
+author: pix
+version: 1.0.0
+metadata:
+  author: pix
+  version: 1.0.0
+  created: 2026-09-22
+  last_reviewed: 2026-09-22
+  review_interval_days: 90
+  dependencies: []
+  schema_expectations: {}
+provenance:
+  maintainer: pix
+  version: 1.0.0
+  created: 2026-09-22
+  source_references: []
 ---
 
-# pix-develop-docs
+# /pix-develop-docs
 
-## 📂 基础信息
+Generate evolutionary development documentation that explains how to rebuild a project from scratch, phase by phase.
 
-| 属性 | 值 |
-| :--- | :--- |
-| **名称** | pix-develop-docs |
-| **版本** | 1.0.0 |
-| **类型** | 项目分析技能 |
-| **核心功能** | 生成演进式开发文档 |
-| **适用环境** | Trae |
-| **适用项目** | 所有开发项目（语言无关） |
+## Trigger Examples
 
-## 🎯 核心目标
-
-通过"重新实现"的方式帮助理解复杂项目，从需求角度出发，采用演进式开发思路，生成结构化的开发文档。文档展示如何从零开始，逐步构建项目，帮助开发者深入理解项目的设计思路和实现细节。
-
-### 解决的问题
-
-| 痛点 | 解决方案 |
-| :--- | :--- |
-| 项目复杂难以理解 | 拆解为多个演进阶段，逐步深入 |
-| 不清楚设计决策原因 | 从需求出发，解释每个决策的背景 |
-| 缺乏系统性文档 | 生成标准化的开发文档序列 |
-| 难以把握整体架构 | 从框架搭建到功能完善，循序渐进 |
-
-## 🚀 使用方法
-
-### 激活方式
-
-当用户询问以下类型的问题时，pix-develop-docs 会自动激活：
-
-- "分析这个项目并生成开发文档"
+- "analyze this project and generate development docs"
 - "帮我理解这个项目的架构"
-- "生成项目的演进式开发文档"
+- "generate the evolutionary dev docs for this codebase"
+- "create project documentation from re-implementation perspective"
 - "从零开始重新实现这个项目"
-- "创建项目开发文档"
 
-### 工作流程
+## When to Use
 
-1. **项目扫描**：读取项目代码，分析目录结构和技术栈
-2. **需求分析**：识别核心功能和业务需求
-3. **功能拆解**：将项目拆解为多个演进阶段
-4. **文档生成**：生成 00_ 前缀的 markdown 文档序列
+- User wants to understand a complex unfamiliar project
+- Onboarding to a new codebase
+- Creating architecture documentation
+- Preparing technical handoff or knowledge transfer
+- User asks "how would I build this from scratch?"
 
-### 预期输出
+## When NOT to Use
 
-生成以下文档序列（00_ 前缀递增）：
+- User wants API documentation (use api-doc skill)
+- User wants a README (use readme-gen skill)
+- User wants code comments only
+- Project is trivial (< 5 source files, single module)
 
-- `00_项目概述与需求分析.md`
-- `01_核心功能拆解.md`
-- `02_阶段一_框架搭建.md`
-- `03_阶段二_核心功能实现.md`
-- `04_阶段三_功能扩展与优化.md`
-- `05_阶段四_完善与细节处理.md`
-- `06_总结与最佳实践.md`
+## Workflow
 
-## 📋 文档结构规范
+### Step 1: Project Scan
 
-### 文档命名规则
+Scan the project root to determine:
 
-- 格式：`NN_标题.md`
-- NN：两位数字，从 00 开始递增
-- 标题：使用中文，描述文档内容
+1. **Language & Framework** — look for lock files and config:
+   - `package.json` / `pnpm-lock.yaml` → Node.js
+   - `go.mod` → Go
+   - `requirements.txt` / `pyproject.toml` / `Pipfile` → Python
+   - `Cargo.toml` → Rust
+   - `pom.xml` / `build.gradle` → Java
+   - `Gemfile` → Ruby
+   - `composer.json` → PHP
 
-### 文档内容规范
+2. **Architecture pattern** — check top-level directories:
+   - `cmd/`, `internal/`, `pkg/` → Go standard layout
+   - `src/`, `dist/`, `public/` → Frontend app
+   - `server/`, `handlers/`, `models/` → Backend service
+   - `lib/`, `tests/` → Library/package
+   - `infra/`, `terraform/`, `k8s/` → Infrastructure project
 
-每个文档包含以下部分：
+3. **Entry points** — find `main.*`, `index.*`, `app.*`, `__main__.py`, `main.go`
 
-1. **概述**：本阶段的目标和范围
-2. **需求分析**：当前阶段需要实现的需求
-3. **技术方案**：采用的技术方案和设计决策
-4. **实现步骤**：详细的实现步骤和代码示例
-5. **关键决策**：重要设计决策的原因说明
-6. **验证方法**：如何验证本阶段的实现
+4. **Dependencies** — parse the primary manifest file for the full dependency tree
 
-## 🌟 文档模板
+Read the entry point files and 3-5 most important module files to understand the core business logic.
 
-### 00_项目概述与需求分析.md
+### Step 2: Functional Decomposition
 
-```markdown
-# 项目概述与需求分析
+Break the project into 4-6 evolutionary phases. Each phase must:
 
-## 项目背景
+- Be independently deployable/testable
+- Build on the previous phase
+- Cover a coherent set of functionality
+- Follow this ordering:
 
-[项目背景说明]
-
-## 核心需求
-
-[核心需求列表]
-
-## 技术栈概览
-
-[技术栈说明]
-
-## 项目结构
-
-[目录结构说明]
+```
+Phase 1: Project skeleton + core data model
+Phase 2: Core business logic (the "must-have" feature)
+Phase 3: External integrations (APIs, DB, file I/O)
+Phase 4: Secondary features (auth, config, logging)
+Phase 5: Polish (error handling, edge cases, performance)
 ```
 
-### 01_核心功能拆解.md
+For each phase, identify:
+- **Input**: what data/config goes in
+- **Output**: what it produces
+- **Dependencies**: what prior phases it needs
+- **Verification**: how to confirm it works (test command, curl, manual check)
+
+### Step 3: Document Generation
+
+Create a directory at the project root named `docs/evolutionary-dev/` (or `{project}-dev-docs/`). Generate the following files sequentially:
+
+#### File: `00_项目概述与需求分析.md`
+
+Contents:
+- Project background (1 paragraph: what problem it solves, for whom)
+- Core functional requirements (numbered list, 5-10 items)
+- Non-functional requirements (performance, security, scalability)
+- Tech stack table: language, framework, key libraries with versions
+- Directory tree with 1-line purpose per entry
+- Architecture overview (1 paragraph + diagram reference if applicable)
+- Dev environment setup (exact commands to clone, install, run)
+
+#### File: `01_核心功能拆解.md`
+
+Contents:
+- Module inventory: table with module name, purpose, file count, complexity
+- Dependency graph: which modules import/call which
+- Data flow: entry → processing → storage → response
+- Priority matrix: must-have vs nice-to-have features
+- API surface: public endpoints/functions with signatures
+
+#### Files: `02_阶段一_*.md` through `05_阶段四_*.md`
+
+Each phase file must contain:
 
 ```markdown
-# 核心功能拆解
+# Phase N: [Phase Name]
 
-## 功能模块划分
+## Objective
+[One sentence: what this phase delivers]
 
-[功能模块列表]
+## Requirements
+[What needs to work after this phase]
 
-## 依赖关系
+## Technical Design
+[Architecture decisions, patterns chosen, and WHY]
 
-[模块依赖图]
+## Implementation Steps
+1. [Concrete step with file paths]
+   - Create `src/models/user.py` with User dataclass
+   - Fields: id (UUID), email (str), created_at (datetime)
+   - Validation: email must match RFC 5322
+2. [Next step]
+   ...
 
-## 优先级排序
+## Key Decisions
+| Decision | Alternative Rejected | Reason |
+|----------|---------------------|--------|
+| Use UUID v7 | Auto-increment ID | Better for distributed systems |
 
-[功能优先级说明]
+## Verification
+- Run: `python -m pytest tests/test_phase_n.py`
+- Expected: all green, coverage > 80%
+- Manual: [specific manual check]
 ```
 
-### 02_阶段一_框架搭建.md
+#### File: `06_总结与最佳实践.md`
 
-```markdown
-# 阶段一：框架搭建
+Contents:
+- Complete architecture recap
+- Design patterns used (with file:line references)
+- Performance characteristics
+- Security considerations
+- Lessons learned from the analysis
+- Suggested improvements
 
-## 目标
+### Step 4: Quality Checks
 
-[本阶段目标]
+After generating all documents:
 
-## 需求分析
+1. Verify each phase builds logically on the previous
+2. Check that file paths referenced in docs actually exist in the project
+3. Ensure code snippets are syntactically valid
+4. Confirm the evolution order is dependency-respectful (no forward refs)
+5. Validate total doc directory size is reasonable (< 50KB)
 
-[当前需求]
+## Analysis Methodology
 
-## 技术方案
+### Code Reading Order
 
-[技术方案说明]
+1. Entry point → understand boot sequence
+2. Config → understand environment and secrets
+3. Models/types → understand data shapes
+4. Core business logic → understand the "what"
+5. Integrations → understand the "how"
+6. Tests → understand expected behavior
+7. Error handling → understand failure modes
 
-## 实现步骤
+### Decision Inference Rules
 
-1. [步骤1]
-2. [步骤2]
-3. [步骤3]
+When the codebase doesn't explain *why* a decision was made:
 
-## 关键决策
+- **Pattern observed** → look for the alternative that was rejected
+- **Library chosen** → check if a lighter/simpler alternative exists and was passed over
+- **Architecture style** → identify if it solves a specific scaling/reliability problem
+- **Naming convention** → check if it aligns with the framework's ecosystem norms
 
-[决策说明]
+Record each inferred decision with evidence. Mark low-confidence inferences explicitly.
 
-## 验证方法
+### Anti-Pattern Detection
 
-[验证方法]
-```
+Flag these during analysis and note them in the final docs:
 
-### 03_阶段二_核心功能实现.md
+- God classes/modules (> 500 lines doing multiple things)
+- Circular dependencies
+- Configuration scattered across files
+- Missing error handling on I/O operations
+- Hardcoded values that should be configurable
+- Test coverage gaps in core logic
 
-```markdown
-# 阶段二：核心功能实现
+## Output Format
 
-## 目标
+All documents use this naming convention: `NN_中文标题.md`
 
-[本阶段目标]
+- NN: two-digit zero-padded number starting from 00
+- Title: Chinese, descriptive, no special characters
+- Encoding: UTF-8
+- Line endings: LF
+- Max file size: 15KB per document
 
-## 需求分析
+## Gotchas
 
-[当前需求]
+- Projects with monorepo structure (e.g., pnpm workspaces, Go modules) need the analysis scoped to a single package — ask the user which package to focus on
+- Generated code examples should use the project's actual coding style, not a generic style guide — detect this from existing source files
+- Some projects have circular imports by design (e.g., Django apps) — do not flag these as anti-patterns without evidence they cause problems
+- Non-English projects may use mixed-language comments — preserve the original language in code snippets
+- Microservice architectures should be documented per-service, not as a monolith — detect by checking for independent deploy units (Dockerfiles, docker-compose services)
 
-## 技术方案
+## Cross-Platform Compatibility
 
-[技术方案说明]
+This skill works on any platform that supports markdown document generation:
 
-## 实现步骤
-
-[详细实现步骤]
-
-## 关键决策
-
-[决策说明]
-
-## 验证方法
-
-[验证方法]
-```
-
-### 04_阶段三_功能扩展与优化.md
-
-```markdown
-# 阶段三：功能扩展与优化
-
-## 目标
-
-[本阶段目标]
-
-## 需求分析
-
-[当前需求]
-
-## 技术方案
-
-[技术方案说明]
-
-## 实现步骤
-
-[详细实现步骤]
-
-## 关键决策
-
-[决策说明]
-
-## 验证方法
-
-[验证方法]
-```
-
-### 05_阶段四_完善与细节处理.md
-
-```markdown
-# 阶段四：完善与细节处理
-
-## 目标
-
-[本阶段目标]
-
-## 需求分析
-
-[当前需求]
-
-## 技术方案
-
-[技术方案说明]
-
-## 实现步骤
-
-[详细实现步骤]
-
-## 关键决策
-
-[决策说明]
-
-## 验证方法
-
-[验证方法]
-```
-
-### 06_总结与最佳实践.md
-
-```markdown
-# 总结与最佳实践
-
-## 项目总结
-
-[项目整体总结]
-
-## 设计模式
-
-[使用的设计模式]
-
-## 最佳实践
-
-[最佳实践列表]
-
-## 经验教训
-
-[经验教训]
-```
-
-## 🔧 实现指南
-
-### 分析步骤
-
-1. **扫描项目结构**
-   - 识别主要目录和文件
-   - 分析技术栈和依赖
-   - 理解项目架构
-
-2. **识别核心功能**
-   - 分析主要入口文件
-   - 识别关键模块和类
-   - 理解业务逻辑
-
-3. **拆解演进阶段**
-   - 确定最小可行产品（MVP）
-   - 识别功能依赖关系
-   - 规划演进路径
-
-4. **生成文档**
-   - 按模板生成每个阶段的文档
-   - 包含代码示例和决策说明
-   - 确保文档连贯性
-
-### 代码分析要点
-
-- **入口分析**：找到程序入口点，理解启动流程
-- **依赖分析**：分析依赖关系，理解模块交互
-- **数据流分析**：追踪数据流动，理解业务逻辑
-- **关键算法**：识别核心算法，理解实现原理
-
-### 文档编写要点
-
-- **需求驱动**：每个阶段从需求出发，解释为什么这样做
-- **循序渐进**：从简单到复杂，逐步深入
-- **代码示例**：提供关键代码片段，帮助理解
-- **决策说明**：解释重要设计决策的原因
-- **验证方法**：提供验证实现的方法
-
-## 📚 最佳实践
-
-### 分析阶段
-
-- **从整体到局部**：先理解整体架构，再深入细节
-- **关注核心路径**：优先分析核心业务流程
-- **记录疑问**：记录不理解的地方，后续深入分析
-
-### 文档编写
-
-- **保持连贯性**：确保各阶段文档的逻辑连贯
-- **使用图表**：适当使用图表辅助说明
-- **代码注释**：代码示例要有清晰注释
-- **避免冗余**：避免重复相同内容
-
-### 质量保证
-
-- **逻辑检查**：确保演进路径合理
-- **完整性检查**：确保覆盖所有核心功能
-- **可读性检查**：确保文档易于理解
-
-## 🎓 使用示例
-
-### 示例 1：分析 Web 应用项目
-
-**用户请求**："分析这个 Web 应用项目并生成开发文档"
-
-**响应**：
-
-1. 扫描项目结构，识别前端、后端、数据库等模块
-2. 分析核心功能：用户认证、数据管理、API 接口等
-3. 拆解演进阶段：
-   - 阶段一：基础框架搭建
-   - 阶段二：用户认证功能
-   - 阶段三：数据管理功能
-   - 阶段四：API 接口和优化
-4. 生成 00_到 06_ 的文档序列
-
-### 示例 2：分析后端服务项目
-
-**用户请求**："帮我理解这个后端服务项目"
-
-**响应**：
-
-1. 扫描项目结构，识别服务层、数据层、工具层等
-2. 分析核心功能：请求处理、数据存储、业务逻辑等
-3. 拆解演进阶段：
-   - 阶段一：服务框架搭建
-   - 阶段二：核心业务逻辑
-   - 阶段三：数据存储和查询
-   - 阶段四：性能优化和监控
-4. 生成 00_到 06_ 的文档序列
-
-## 🔍 技术栈识别
-
-### 常见技术栈识别
-
-| 文件/目录 | 技术栈 |
-| :--- | :--- |
-| package.json | Node.js/JavaScript |
-| requirements.txt | Python |
-| pom.xml | Java (Maven) |
-| build.gradle | Java (Gradle) |
-| go.mod | Go |
-| Cargo.toml | Rust |
-| composer.json | PHP |
-| Gemfile | Ruby |
-
-### 框架识别
-
-| 文件/目录 | 框架 |
-| :--- | :--- |
-| next.config.js | Next.js |
-| vite.config.js | Vite |
-| webpack.config.js | Webpack |
-| tsconfig.json | TypeScript |
-| .svelte-kit/ | SvelteKit |
-| nuxt.config.js | Nuxt.js |
-
-## 📝 注意事项
-
-- **语言无关**：适用于所有编程语言和框架
-- **灵活调整**：根据项目特点调整文档结构
-- **持续更新**：项目变化时及时更新文档
-- **用户友好**：确保文档易于理解和跟随
-
-## 🚀 扩展性
-
-可以根据项目特点添加额外的文档：
-
-- `07_部署与运维.md`
-- `08_测试策略.md`
-- `09_性能优化.md`
-- `10_扩展开发.md`
-
-## 🎯 总结
-
-pix-develop-docs 是一个强大的项目分析技能，通过演进式开发文档帮助开发者深入理解复杂项目。从需求出发，逐步构建，让项目的设计思路和实现细节变得清晰易懂。
-
-记住，好的开发文档应该：
-
-1. **需求驱动**：从需求出发，解释设计决策
-2. **循序渐进**：从简单到复杂，逐步深入
-3. **代码示例**：提供关键代码片段
-4. **决策说明**：解释重要设计决策的原因
-5. **易于跟随**：让读者能够跟随文档重新实现项目
+| Platform | Notes |
+|----------|-------|
+| Claude Code | Native support, full workflow |
+| Cursor | Native support, full workflow |
+| Codex CLI | Native support, full workflow |
+| Copilot | Works, may need manual file creation |
+| Trae | Native support, full workflow |
+| Windsurf | Native support, full workflow |
+| Zed | Works with assistant mode |
+| Continue.dev | Works with chat mode |

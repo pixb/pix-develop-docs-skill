@@ -1,0 +1,1 @@
+# No external dependencies required — this skill uses Python stdlib only.
